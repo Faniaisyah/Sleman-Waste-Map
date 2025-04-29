@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peta Lokasi</title>
+    <!-- Memuat CSS untuk Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Peta Lokasi</h1>
+    <div id="map"></div>
+
+    <!-- Memuat JavaScript untuk Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <script>
+        // Membuat peta
+        var map = L.map('map').setView([-7.795580, 110.369490], 13); // Koordinat pusat peta
+
+        // Menambahkan layer peta dari OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Fungsi untuk memuat data JSON dan menambahkannya ke peta
+        fetch('locations.json')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(location => {
+                    // Menambah marker untuk setiap titik lokasi
+                    L.marker([location.lat, location.lon])
+                        .addTo(map)
+                        .bindPopup(`<b>${location.name}</b>`);
+                });
+            })
+            .catch(error => console.error('Error loading the JSON data:', error));
+    </script>
+
+</body>
+</html>
